@@ -6,4 +6,4 @@ local luadev = require("neodev").setup({
 })
 
 local lspconfig = require('lspconfig')
-lspconfig.sumneko_lua.setup(luadev)
+lspconfig.lua_ls.setup(luadev)
