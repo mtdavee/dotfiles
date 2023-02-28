@@ -2,11 +2,12 @@ local cmd = vim.cmd
 local fn = vim.fn
 
 -- Auto install packer.nvim if not exists
-local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+local install_path = fn.stdpath("data") .. "/site/pac k/packer/start/packer.nvim"
 if fn.empty(fn.glob(install_path)) > 0 then
 	fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
 	vim.cmd("packadd packer.nvim")
 end
+
 
 cmd([[
   augroup packer_user_config
@@ -19,11 +20,15 @@ cmd([[
 cmd("autocmd BufWritePost plugins.lua PackerCompile")
 
 return require("packer").startup(function(use)
+  use 'wbthomason/packer.nvim' -- this is essential.
+
   -- lsp
   use("neovim/nvim-lspconfig")
   use({
 	"ray-x/lsp_signature.nvim",
-	config = require("plugins.configs.lspsignature"),
+	config = function()
+  	  require("plugins.configs.lspsignature")
+  	end
   })
   use("jose-elias-alvarez/nvim-lsp-ts-utils")
 
@@ -34,13 +39,17 @@ return require("packer").startup(function(use)
 		-- :Trouble<cmd>
 		"folke/trouble.nvim",
 		requires = "kyazdani42/nvim-web-devicons",
-		config = require("trouble").setup({}),
+		config = function()
+			require("trouble").setup({})
+		end
 	})
 
   -- null-ls (code actions, etc.)
   use({
 		"jose-elias-alvarez/null-ls.nvim",
-		config = require("plugins.configs.null-ls"),
+		config = function()
+			require("plugins.configs.null-ls")
+		end
 	})
   -- plenary required for null-ls
   use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
@@ -48,7 +57,9 @@ return require("packer").startup(function(use)
   -- completion
   use({
 	"hrsh7th/nvim-cmp",
-	config = require("plugins.configs.cmp"),
+	config = function()
+		require("plugins.configs.cmp")
+	end,
 	requires = {
 		"hrsh7th/cmp-buffer", --
 		-- "ray-x/cmp-treesitter", --
@@ -61,7 +72,9 @@ return require("packer").startup(function(use)
   })
   use({
 	"j-hui/fidget.nvim",
-	config = require("fidget").setup({}),
+	config = function()
+		require("fidget").setup({})
+	end
   })
 
   -- languages
@@ -69,12 +82,15 @@ return require("packer").startup(function(use)
   use("pangloss/vim-javascript")
   use("leafgarland/typescript-vim")
   use("peitalin/vim-jsx-typescript")
-  -- specifically lua nvim development plugin
+  -- neodev - replaces lua-dev
   use({
-	"folke/lua-dev.nvim",
- 	config = require("plugins.configs.luadev"),
+	  "folke/neodev.nvim"
+	  -- IMPORTANT: make sure to setup neodev BEFORE lspconfig
+ 	  -- config = function()
+	--	require("plugins.configs.luadev")
+	  --end
   })
-
+ 
   -- snippets
   use("L3MON4D3/LuaSnip")
   use({
@@ -89,7 +105,9 @@ return require("packer").startup(function(use)
   use("kyazdani42/nvim-web-devicons")
   use({
 	"nvim-tree/nvim-tree.lua",
-	config = require("plugins.configs.nvimtree"),
+	config = function()
+		require("plugins.configs.nvimtree")
+	end,
 	requires = "kyazdani42/nvim-web-devicons",
   })
 
@@ -97,14 +115,18 @@ return require("packer").startup(function(use)
   use({
 	"nvim-treesitter/nvim-treesitter",
 	run = ":TSUpdate",
-	config = require("plugins.configs.treesitter"),
+	config = function()
+		require("plugins.configs.treesitter")
+	end
   })
   use("nvim-treesitter/playground")
   -- fuzzy finder
   use("junegunn/fzf")
   use({
 	"junegunn/fzf.vim",
-	-- config = require("plugins.configs.fzf"),
+	config = function()
+		require("plugins.configs.fzf")
+	end,
 	run = function()
 		vim.fn["fzf#install()"](0)
 	end,
