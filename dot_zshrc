@@ -121,6 +121,7 @@ alias kc="kubectl"
 alias k9r="k9s --readonly"
 alias ktx="kubectl config current-context"
 alias gpo="git push -u origin"
+alias hg="history | grep"
 
 autoload -Uz compinit && compinit -C
 

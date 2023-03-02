@@ -83,14 +83,8 @@ return require("packer").startup(function(use)
   use("leafgarland/typescript-vim")
   use("peitalin/vim-jsx-typescript")
   -- neodev - replaces lua-dev
-  use({
-	  "folke/neodev.nvim"
-	  -- IMPORTANT: make sure to setup neodev BEFORE lspconfig
- 	  -- config = function()
-	--	require("plugins.configs.luadev")
-	  --end
-  })
- 
+  use("folke/neodev.nvim")
+
   -- snippets
   use("L3MON4D3/LuaSnip")
   use({
@@ -136,8 +130,7 @@ return require("packer").startup(function(use)
   use("easymotion/vim-easymotion")
 
   -- markdown preview
-  use("ellisonleao/glow.nvim")
-
+  use {"ellisonleao/glow.nvim", config = function() require("glow").setup() end}
   -- comment
   use {
     'numToStr/Comment.nvim',
