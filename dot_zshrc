@@ -113,18 +113,34 @@ if [ -z "$TMUX" ]; then
 	tmux attach -t default || tmux new -s default
 fi
 
+# vim aliases
 alias vim="nvim"
 alias vzc="vim ~/.zshrc"
+# general system aliases
 alias ll="ls -la"
+alias hg="history | grep"
+# git aliases
 alias gst="git status"
+alias gpo="git push -u origin"
+alias gco="git checkout"
+alias gcb="git checkout -b"
+alias gfa="git fetch --all"
+alias gmg="git merge"
+alias gpl="git pull"
+# k8s aliases
 alias kc="kubectl"
 alias k9r="k9s --readonly"
 alias ktx="kubectl config current-context"
-alias gpo="git push -u origin"
-alias hg="history | grep"
+# Docker aliases
+alias dke="docker exec -it"
+alias dkl="docker logs -f"
+alias dkps="docker ps"
+alias dkpg="docker ps | grep"
 
 autoload -Uz compinit && compinit -C
 
 # source any work-related env
 [ -f ~/.work ] && source ~/.work
 
+source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"

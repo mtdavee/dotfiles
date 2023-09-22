@@ -1,4 +1,5 @@
 require("settings")
+require("utils")
 require("plugins")
 require("maps")
 require("lsp")
@@ -26,3 +27,6 @@ cmd([[highlight! CmpItemKindKeyword guibg=NONE guifg=#D4D4D4]])
 cmd([[highlight! CmpItemKindProperty guibg=NONE guifg=#D4D4D4]])
 cmd([[highlight! CmpItemKindUnit guibg=NONE guifg=#D4D4D4]])
 
+
+vim.api.nvim_set_hl(0, "CopilotSuggestion", { fg = "#569CD6", bg = "#1E1E1E" })
+vim.api.nvim_set_hl(0, "CmpItemKindCopilot", {fg ="#6CC644"})

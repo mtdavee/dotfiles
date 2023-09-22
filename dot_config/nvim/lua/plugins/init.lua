@@ -20,20 +20,33 @@ cmd([[
 cmd("autocmd BufWritePost plugins.lua PackerCompile")
 
 return require("packer").startup(function(use)
-  use 'wbthomason/packer.nvim' -- this is essential.
+	use 'wbthomason/packer.nvim' -- this is essential.
 
-  -- lsp
-  use("neovim/nvim-lspconfig")
-  use({
-	"ray-x/lsp_signature.nvim",
-	config = function()
-  	  require("plugins.configs.lspsignature")
-  	end
-  })
-  use("jose-elias-alvarez/nvim-lsp-ts-utils")
+	-- lsp
+	use("neovim/nvim-lspconfig")
+	use({
+		"ray-x/lsp_signature.nvim",
+		config = function()
+			require("plugins.configs.lspsignature")
+		end
+	})
+	use("jose-elias-alvarez/nvim-lsp-ts-utils")
 
-  -- Trouble
-  use({
+	-- DAP debugger
+	use({
+		"mfussenegger/nvim-dap",
+		requires = {
+			"leoluz/nvim-dap-go",
+			"rcarriga/nvim-dap-ui",
+			"theHamsta/nvim-dap-virtual-text"
+		},
+		config = function()
+			require("plugins.configs.dap")
+		end
+	})
+
+	-- Trouble
+	use({
 		-- prettier diagnostics, I don't use it a lot but
 		-- but maybe I should. No keybindings, just
 		-- :Trouble<cmd>
@@ -44,102 +57,126 @@ return require("packer").startup(function(use)
 		end
 	})
 
-  -- null-ls (code actions, etc.)
-  use({
+	-- null-ls (code actions, etc.)
+	use({
 		"jose-elias-alvarez/null-ls.nvim",
 		config = function()
 			require("plugins.configs.null-ls")
 		end
 	})
-  -- plenary required for null-ls
-  use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
+	-- plenary required for null-ls
+	use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
 
-  -- completion
-  use({
-	"hrsh7th/nvim-cmp",
-	config = function()
-		require("plugins.configs.cmp")
-	end,
-	requires = {
-		"hrsh7th/cmp-buffer", --
-		-- "ray-x/cmp-treesitter", --
-		"hrsh7th/cmp-nvim-lua",
-		"hrsh7th/cmp-nvim-lsp",
-		"hrsh7th/cmp-path",
-		"hrsh7th/cmp-emoji",
-		"onsails/lspkind-nvim",
-	},
-  })
-  use({
-	"j-hui/fidget.nvim",
-	config = function()
-		require("fidget").setup({})
-	end
-  })
+	-- Copilot
+	-- use("github/copilot.vim")
+	use {
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		config = function()
+			require("plugins.configs.copilot")
+		end,
+	}
 
-  -- languages
-  use("fatih/vim-go")
-  use("pangloss/vim-javascript")
-  use("leafgarland/typescript-vim")
-  use("peitalin/vim-jsx-typescript")
-  -- neodev - replaces lua-dev
-  use("folke/neodev.nvim")
+	use {
+		"zbirenbaum/copilot-cmp",
+		after = { "copilot.lua" },
+		config = function()
+			require("copilot_cmp").setup()
+		end
+	}
 
-  -- snippets
-  use("L3MON4D3/LuaSnip")
-  use({
-	"saadparwaiz1/cmp_luasnip",
---	config = require("plugins.configs.snippets"),
-  })
+	-- completion
+	use({
+		"hrsh7th/nvim-cmp",
+		config = function()
+			require("plugins.configs.cmp")
+		end,
+		requires = {
+			"hrsh7th/cmp-buffer", --
+			-- "ray-x/cmp-treesitter", --
+			"hrsh7th/cmp-nvim-lua",
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-emoji",
+			"onsails/lspkind-nvim",
+		},
+	})
 
-  -- other
-  use({ "rcarriga/nvim-notify" })
+	use {
+		'j-hui/fidget.nvim',
+		tag = 'legacy',
+		config = function()
+			require("fidget").setup {
+				-- options
+			}
+		end,
+	}
 
-  -- nvim tree
-  use("kyazdani42/nvim-web-devicons")
-  use({
-	"nvim-tree/nvim-tree.lua",
-	config = function()
-		require("plugins.configs.nvimtree")
-	end,
-	requires = "kyazdani42/nvim-web-devicons",
-  })
+	-- languages
+	use("fatih/vim-go")
+	use("pangloss/vim-javascript")
+	use("leafgarland/typescript-vim")
+	use("peitalin/vim-jsx-typescript")
+	use("hashivim/vim-terraform")
+	-- neodev - replaces lua-dev
+	use("folke/neodev.nvim")
 
-  -- nvim treesitter
-  use({
-	"nvim-treesitter/nvim-treesitter",
-	run = ":TSUpdate",
-	config = function()
-		require("plugins.configs.treesitter")
-	end
-  })
-  use("nvim-treesitter/playground")
-  -- fuzzy finder
-  use("junegunn/fzf")
-  use({
-	"junegunn/fzf.vim",
-	config = function()
-		require("plugins.configs.fzf")
-	end,
-	run = function()
-		vim.fn["fzf#install()"](0)
-	end,
-  })
+	-- snippets
+	use("L3MON4D3/LuaSnip")
+	use({
+		"saadparwaiz1/cmp_luasnip",
+		--	config = require("plugins.configs.snippets"),
+	})
 
-  -- jump to character (visual gamechanger)
-  use("easymotion/vim-easymotion")
+	-- other
+	use({ "rcarriga/nvim-notify" })
 
-  -- markdown preview
-  use {"ellisonleao/glow.nvim", config = function() require("glow").setup() end}
-  -- comment
-  use {
-    'numToStr/Comment.nvim',
-    config = function()
-        require('Comment').setup()
-    end
-  }
+	-- nvim tree
+	use("kyazdani42/nvim-web-devicons")
+	use({
+		"nvim-tree/nvim-tree.lua",
+		config = function()
+			require("plugins.configs.nvimtree")
+		end,
+		requires = "kyazdani42/nvim-web-devicons",
+	})
 
-  -- colorscheme
+	-- nvim treesitter
+	use({
+		"nvim-treesitter/nvim-treesitter",
+		run = ":TSUpdate",
+		config = function()
+			require("plugins.configs.treesitter")
+		end
+	})
+	use("nvim-treesitter/playground")
+	-- fuzzy finder
+	use("junegunn/fzf")
+	use({
+		"junegunn/fzf.vim",
+		config = function()
+			require("plugins.configs.fzf")
+		end,
+		run = function()
+			vim.fn["fzf#install()"](0)
+		end,
+	})
+
+	-- jump to character (visual gamechanger)
+	use("easymotion/vim-easymotion")
+
+	-- markdown preview
+	use { "ellisonleao/glow.nvim", config = function() require("glow").setup() end }
+	-- comment
+	use {
+		'numToStr/Comment.nvim',
+		config = function()
+			require('Comment').setup()
+		end
+	}
+
+	-- colorscheme
 	use("tjdevries/colorbuddy.vim") -- colorscheme creator, needed for a few of these
 	use("rakr/vim-one")
 	use("rebelot/kanagawa.nvim")
@@ -157,4 +194,5 @@ return require("packer").startup(function(use)
 		"catppuccin/nvim",
 		as = "catppuccin",
 	})
+
 end)

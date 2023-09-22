@@ -15,6 +15,7 @@ local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 	-- end,
 	sources = {
 		require("null-ls").builtins.formatting.stylua,
+		require("null-ls").builtins.formatting.terraform_fmt,
 		require("null-ls").builtins.diagnostics.eslint,
 		require("null-ls").builtins.completion.spell,
 	},
